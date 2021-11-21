@@ -1,0 +1,24 @@
+- hosts: test_ops
+  tasks:
+  - name: run container
+    docker_container:
+      name: ops
+      hostname: a2m
+      auto_remove: yes
+      image: python:3.9.7
+      command: ["sleep","300"]
+
+  - name: echo codes
+    community.docker.docker_container_exec:
+      container: ops
+      command: /bin/bash -c 'echo -e "import base64\nres=\"5ZCM5`hostname`77yM5L2g55qE6IO95Yqb5b6X5Yiw5LqG6K6k5Y+v44CC6YO955yL5Yiw6L+Z6YeM5LqG77yM5Y+R5Liq566A5Y6G6L+H5p2l5ZGX77yM77ya77yJLGx2emhqY0B5b255b3UuY29tCg==\"\nprint(base64.b64decode(res).decode())" > code.py'
+
+  - name: run codes
+    community.docker.docker_container_exec:
+      container: ops
+      command: python3 code.py
+    register: result
+
+  - name: Print stdout
+    debug:
+      var: result.stdoutrun_container.yml
